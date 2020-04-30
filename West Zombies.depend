@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1588204675 source:c:\users\vinic\documents\engenharia de software\west zombies\main.c
+	<stdio.h>
+	<stdlib.h>
+	<locale.h>
+
