@@ -15,23 +15,73 @@ void MontaMenu();
 void instrucoes();
 void infodev();
 void menuCadastro();
+void Trailer();
+void TrocaCursor(int value);
 void menu(int select);
 
 // Funções
 int main()
 {
     int selecao;
+    // Esconde o cursor
+    TrocaCursor(0);
+    // Limpa a tela
     system("cls");
+    // Define a cor amarela
     system("color 6");
+    // Chama a tela de apresentação
+    Trailer();
+    // Dorme durante 3 segundos
+    sleep(3);
+    // Mostra o Cursor
+    TrocaCursor(1);
+    // Limpa a tela
+    system("cls");
     printf("\n");
+    // Chama a função que monta o menu
     MontaMenu();
+    // Pede ao usuário uma opção do menu
     printf("\nSelecione a opcao: ");
     scanf("%d", &selecao);
+    // Assim que o usuário escolhe sua seleção ele chama a função menu chamando a opção escolhida
     menu(selecao);
 
     return 0;
 }
 
+// Mostra(1 == true) ou esconde(0 == false) a | na hora de digitar
+void TrocaCursor(int value){
+    HANDLE hOut;
+    CONSOLE_CURSOR_INFO cursor;
+    hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    cursor.dwSize = 10;
+    cursor.bVisible = value;
+    SetConsoleCursorInfo(hOut, &cursor);
+}
+// Mostra a logo
+void Trailer(){
+
+
+
+printf("\n\n\n\n\n\n");
+printf("                             '##:::::'##:'########::'######::'########:\n");
+printf("                              ##:'##: ##: ##.....::'##... ##:... ##..::\n");
+printf("                              ##: ##: ##: ##::::::: ##:::..::::: ##::::\n");
+printf("                              ##: ##: ##: ######:::. ######::::: ##::::\n");
+printf("                              ##: ##: ##: ##...:::::..... ##:::: ##::::\n");
+printf("                              ##: ##: ##: ##:::::::'##::: ##:::: ##::::\n");
+printf("                             . ###. ###:: ########:. ######::::: ##::::\n");
+printf("                             :...::...:::........:::......::::::..:::::\n");
+printf("               '########::'#######::'##::::'##:'########::'####:'########::'######::\n");
+printf("               ..... ##::'##.... ##: ###::'###: ##.... ##:. ##:: ##.....::'##... ##:\n");
+printf("               :::: ##::: ##:::: ##: ####'####: ##:::: ##:: ##:: ##::::::: ##:::..::\n");
+printf("               ::: ##:::: ##:::: ##: ## ### ##: ########::: ##:: ######:::. ######::\n");
+printf("               :: ##::::: ##:::: ##: ##. #: ##: ##.... ##:: ##:: ##...:::::..... ##:\n");
+printf("               : ##:::::: ##:::: ##: ##:.:: ##: ##:::: ##:: ##:: ##:::::::'##::: ##:\n");
+printf("                ########:. #######:: ##:::: ##: ########::'####: ########:. ######::\n");
+printf("               ........:::.......:::..:::::..::........:::....::........:::......:::\n");
+}
+// Abre o arquivo para armazenar os nomes
 FILE * AbreArquivo(char modo, char caminho[30]){
     FILE *arquivo;
     switch(modo){
@@ -51,18 +101,18 @@ FILE * AbreArquivo(char modo, char caminho[30]){
     }
     return arquivo;
 }
-
+// Fecha o arquivo que armazena os nomes
 void FecharArquivo(FILE * arquivo){
     fclose(arquivo);
 }
-
+// Cadastra um nome e os pontos no arquivo aberto.
 void Cadastra(char nome[30], int pontos){
     FILE *arquivo;
     arquivo = AbreArquivo('a', "nomes.txt");
     fprintf(arquivo, "%s %d\n", nome, pontos);
     FecharArquivo(arquivo);
 }
-
+// Lista os nomes, int tamanho pra definir quantas linhas mostrar
 void Listar(int tamanho){
     FILE *arquivo;
     char nome[30];
@@ -77,6 +127,7 @@ void Listar(int tamanho){
     FecharArquivo(arquivo);
 
 }
+// Cria linha superior no menu usando tabela ascii
 void LinhaSuperior(int tamanho){
     int i;
     printf("%c", 201);
@@ -85,6 +136,7 @@ void LinhaSuperior(int tamanho){
     }
     printf("%c\n", 187);
 }
+// Cria linha no rodapé do menu usando tabela ascii
 void LinhaRodape(int tamanho){
     int i;
     printf("%c", 200);
@@ -93,6 +145,7 @@ void LinhaRodape(int tamanho){
     }
     printf("%c", 188);
 }
+// Cria um item do menu acompanhando as linhas superiores e do rodapé usando tabela ascii
 void MenuItem(int tamanho, char string[]){
 
     printf("%c", 186);
@@ -102,7 +155,7 @@ void MenuItem(int tamanho, char string[]){
 
     printf("%c\n", 186);
 }
-
+// Cria uma linha de separação horizontal usando tabela ascii
 void LinhaHorizontal(int tamanho){
     int i;
     printf("%c", 204);
@@ -110,7 +163,7 @@ void LinhaHorizontal(int tamanho){
         printf("%c", 205);
     printf("%c\n", 185);
 }
-
+// Monta o menu
 void MontaMenu(){
     LinhaSuperior(40);
     MenuItem(40, "Menu Principal");
@@ -122,7 +175,7 @@ void MontaMenu(){
     MenuItem(40, "5 - Sair");
     LinhaRodape(40);
 }
-
+// Função que guarda as informações do menu Instruções
 void instrucoes(){
     system("cls");
     printf("\nInstrucoes do Jogo \n");
@@ -134,6 +187,7 @@ void instrucoes(){
     system("pause>null");
     main();
 }
+// Função que guarda as informações do menu Informações do Desenvolvedor
 void infodev(){
     system("cls");
     printf("\nInformacoes do Desenvolvedor");
@@ -148,6 +202,7 @@ void infodev(){
     system("pause>null");
     main();
 }
+// Função que pede ao usuário digitar um nome e a quantidade de pontos e em seguida chama a função Cadastra para cadastrar no arquivo
 void menuCadastro(){
     char nome[50];
     int pontos;
@@ -161,6 +216,7 @@ void menuCadastro(){
 
     play(nome);
 }
+// Função que chama a função Listar mostrando os nomes cadastrados e pontos cadastrados
 void ranking(){
     system("cls");
     printf("Ranking \n");
@@ -169,6 +225,7 @@ void ranking(){
     system("pause>null");
     main();
 }
+// Função que apresenta o nome recém cadastrado
 void play(char nome[]){
     system("cls");
     printf("Bem vindo %s \n", nome);
@@ -176,7 +233,7 @@ void play(char nome[]){
     system("pause>null");
     main();
 }
-
+// Função da escolha do menu
 void menu(int select){
     char nome[30];
     switch(select){

@@ -1,8 +1,4 @@
-Vinicius
-Vini
-Larissa
-Lari 10
-Vinicius 10
-VInicius 20
-vINICIUS 2001
-0 0
+Vinicius 281
+Oliver 201
+Larissa 2018
+Gabriel 2018
