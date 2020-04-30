@@ -31,22 +31,22 @@ void FecharArquivo(FILE * arquivo){
     fclose(arquivo);
 }
 
-void Cadastra(char nome[30]){
+void Cadastra(char nome[30], int pontos){
     FILE *arquivo;
     arquivo = AbreArquivo('a', "nomes.txt");
-    fprintf(arquivo, "%s\n", nome);
+    fprintf(arquivo, "%s %d\n", nome, pontos);
     FecharArquivo(arquivo);
 }
 
 void Listar(){
     FILE *arquivo;
     char nome[30];
-
+    int pontos;
     arquivo = AbreArquivo('l', "nomes.txt");
 
     while(!feof(arquivo)){
-        fscanf(arquivo, "%s \n", &nome);
-        printf("Nome: %s \n", nome);
+        fscanf(arquivo, "%s %d\n", &nome,&pontos);
+        printf("Nome: %s \n Pontos: %d \n ", nome, pontos);
     }
     FecharArquivo(arquivo);
 
@@ -97,11 +97,14 @@ void infodev(){
 }
 void menuCadastro(){
     char nome[50];
+    int pontos;
     system("cls");
     printf("\nDigite seu nome: ");
     setbuf(stdin, NULL);
     gets(nome);
-    Cadastra(nome);
+    printf("\nDigite uma quantidade de pontos:");
+    scanf("%d", &pontos);
+    Cadastra(nome,pontos);
 
     play(nome);
 }
