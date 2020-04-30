@@ -19,10 +19,12 @@ void Trailer();
 void TrocaCursor(int value);
 void menu(int select);
 
+int aberto = 0;
 // Funções
 int main()
 {
     int selecao;
+
     // Esconde o cursor
     TrocaCursor(0);
     // Limpa a tela
@@ -30,9 +32,13 @@ int main()
     // Define a cor amarela
     system("color 6");
     // Chama a tela de apresentação
-    Trailer();
-    // Dorme durante 3 segundos
-    sleep(3);
+    if(aberto == 0){
+            Trailer();
+            aberto = 1;
+            // Dorme durante 3 segundos
+            sleep(3);
+    }
+
     // Mostra o Cursor
     TrocaCursor(1);
     // Limpa a tela
@@ -40,12 +46,6 @@ int main()
     printf("\n");
     // Chama a função que monta o menu
     MontaMenu();
-    // Pede ao usuário uma opção do menu
-    printf("\nSelecione a opcao: ");
-    scanf("%d", &selecao);
-    // Assim que o usuário escolhe sua seleção ele chama a função menu chamando a opção escolhida
-    menu(selecao);
-
     return 0;
 }
 
@@ -163,17 +163,53 @@ void LinhaHorizontal(int tamanho){
         printf("%c", 205);
     printf("%c\n", 185);
 }
+
+// go to x;
+void gotoxy(int x,int y){
+    COORD c;
+    c.X = x;
+    c.Y = y;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
+}
 // Monta o menu
 void MontaMenu(){
+    TrocaCursor(0);
+    int li = 4, tecla;
     LinhaSuperior(40);
-    MenuItem(40, "Menu Principal");
+    MenuItem(40, "            Menu Principal");
     LinhaHorizontal(40);
-    MenuItem(40, "1 - Iniciar Jogo");
-    MenuItem(40, "2 - Instrucoes do Jogo");
-    MenuItem(40, "3 - Ranking");
-    MenuItem(40, "4 - Informacoes do Desenvolvedor");
-    MenuItem(40, "5 - Sair");
+    MenuItem(40, "    1 - Iniciar Jogo");
+    MenuItem(40, "    2 - Instrucoes do Jogo");
+    MenuItem(40, "    3 - Ranking");
+    MenuItem(40, "    4 - Informacoes do Desenvolvedor");
+    MenuItem(40, "    5 - Sair");
     LinhaRodape(40);
+    gotoxy(1,li);
+    printf(" -> ");
+     do{
+            tecla=0;
+            if(kbhit()){
+                tecla = getch();
+                gotoxy(1,li);
+                printf("   ");
+                if(tecla==224)
+                    tecla = getch();
+                if(tecla == 72)
+                    li--;
+                else
+                    if(tecla == 80)
+                        li++;
+                if(li > 8)
+                    li=4;
+                else
+                    if(li < 4)
+                        li = 8;
+                gotoxy(1,li);
+                printf(" -> ");
+            }
+        }
+        while(tecla != 13);
+        menu(li);
 }
 // Função que guarda as informações do menu Instruções
 void instrucoes(){
@@ -237,22 +273,22 @@ void play(char nome[]){
 void menu(int select){
     char nome[30];
     switch(select){
-    case 1:
+    case 4:
         menuCadastro();
         break;
     ;
 
-    case 2:
+    case 5:
         instrucoes();
         break;
     ;
-    case 3:
+    case 6:
         ranking();
         break;
-    case 4:
+    case 7:
         infodev();
         break;
-    case 5:
+    case 8:
         exit(0);
         break;
     default:
