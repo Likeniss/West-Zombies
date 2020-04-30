@@ -7,6 +7,50 @@ void infodev();
 void menuCadastro();
 void menu(int select);
 
+FILE * AbreArquivo(char modo, char caminho[30]){
+    FILE *arquivo;
+    switch(modo){
+        case 'g':
+            arquivo = fopen(caminho, "wt");
+            break;
+        case 'l':
+            arquivo = fopen(caminho, "rt");
+            break;
+        case 'a':
+            arquivo = fopen(caminho, "a");
+            break;
+    }
+    if(arquivo==NULL){
+        printf("Não foi possível abrir o arquivo");
+        exit(0);
+    }
+    return arquivo;
+}
+
+void FecharArquivo(FILE * arquivo){
+    fclose(arquivo);
+}
+
+void Cadastra(char nome[30]){
+    FILE *arquivo;
+    arquivo = AbreArquivo('a', "nomes.txt");
+    fprintf(arquivo, "%s\n", nome);
+    FecharArquivo(arquivo);
+}
+
+void Listar(){
+    FILE *arquivo;
+    char nome[30];
+
+    arquivo = AbreArquivo('l', "nomes.txt");
+
+    while(!feof(arquivo)){
+        fscanf(arquivo, "%s \n", &nome);
+        printf("Nome: %s \n", nome);
+    }
+    FecharArquivo(arquivo);
+
+}
 int main()
 {
     int selecao;
@@ -19,7 +63,6 @@ int main()
     printf("2 - Instruções do Jogo \n");
     printf("3 - Ranking \n");
     printf("4 - Informações do Desenvolvedor \n");
-
     printf("Selecione a opção: ");
     scanf("%d", &selecao);
 
@@ -55,20 +98,23 @@ void infodev(){
 void menuCadastro(){
     char nome[50];
     system("cls");
-    printf("\n Digite seu nome: ");
-    scanf("%s", nome);
+    printf("\nDigite seu nome: ");
+    setbuf(stdin, NULL);
+    gets(nome);
+    Cadastra(nome);
 
     play(nome);
 }
 void play(char nome[]){
     system("cls");
     printf("Bem vindo %s \n", nome);
-    printf("\n \n Aperte qualquer tecla para voltar...");
+    printf("\n\nAperte qualquer tecla para voltar...");
     system("pause>null");
     main();
 }
 
 void menu(int select){
+    char nome[30];
     switch(select){
     case 1:
         menuCadastro();
@@ -82,9 +128,7 @@ void menu(int select){
     case 3:
 
         printf("Ranking \n");
-        printf("\n 1 - Usuário - 500");
-        printf("\n 2 - Usuário2 - 300");
-        printf("\n 3 - Usuário3 - 300");
+        Listar();
         break;
     case 4:
         infodev();
