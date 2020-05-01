@@ -25,7 +25,7 @@ int aberto = 0;
 // Funções
 int main()
 {
-    int selecao;
+
     // Esconde o cursor
     TrocaCursor(0);
     // Limpa a tela
@@ -93,10 +93,6 @@ FILE * AbreArquivo(char modo, char caminho[30]){
             arquivo = fopen(caminho, "a");
             break;
     }
-    if(arquivo==NULL){
-        printf("Não foi possível abrir o arquivo");
-        exit(0);
-    }
     return arquivo;
 }
 // Fecha o arquivo que armazena os nomes
@@ -116,11 +112,15 @@ void Listar(int tamanho){
     char nome[30];
     int pontos;
     int i;
-    arquivo = AbreArquivo('l', "nomes.txt");
 
-    for(i = 0; i < tamanho; i++){
-        fscanf(arquivo, "%s %d\n", &nome,&pontos);
-        printf("\nNome: %s \nPontos: %d \n", nome, pontos);
+    arquivo = AbreArquivo('l', "nomes.txt");
+    if(arquivo==NULL){
+        printf("O ranking esta vazio.");
+    } else {
+        for(i = 0; i < tamanho; i++){
+            fscanf(arquivo, "%s %d\n", &nome,&pontos);
+            printf("\nNome: %s \nPontos: %d \n", nome, pontos);
+        }
     }
     FecharArquivo(arquivo);
 
@@ -174,6 +174,7 @@ void gotoxy(int x,int y){
 void MontaMenu(){
     int li = 4; // Varíavel de escolha
     int tecla;
+    TrocaCursor(0);
     LinhaSuperior(40);
     MenuItem(40, "            Menu Principal");
     LinhaHorizontal(40);
@@ -236,7 +237,7 @@ void infodev(){
     printf("\n- Vinicius Oliveira");
     printf("\n- Larissa Lazzari");
     printf("\n- Oliver J. Godoy");
-    printf("\n- Gabriel Hoffman");
+    printf("\n- Gabriel Hoffmann");
     printf("\n");
     printf("\n\nAperte qualquer tecla para voltar...");
     system("pause>null");
