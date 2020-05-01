@@ -19,11 +19,12 @@ void Trailer();
 void TrocaCursor(int value);
 void menu(int select);
 
+// Varíaveis globais
 int aberto = 0;
+
 // Funções
 int main()
 {
-    int selecao;
 
     // Esconde o cursor
     TrocaCursor(0);
@@ -38,9 +39,6 @@ int main()
             // Dorme durante 3 segundos
             sleep(3);
     }
-
-    // Mostra o Cursor
-    TrocaCursor(1);
     // Limpa a tela
     system("cls");
     printf("\n");
@@ -95,10 +93,6 @@ FILE * AbreArquivo(char modo, char caminho[30]){
             arquivo = fopen(caminho, "a");
             break;
     }
-    if(arquivo==NULL){
-        printf("Não foi possível abrir o arquivo");
-        exit(0);
-    }
     return arquivo;
 }
 // Fecha o arquivo que armazena os nomes
@@ -118,11 +112,15 @@ void Listar(int tamanho){
     char nome[30];
     int pontos;
     int i;
-    arquivo = AbreArquivo('l', "nomes.txt");
 
-    for(i = 0; i < tamanho; i++){
-        fscanf(arquivo, "%s %d\n", &nome,&pontos);
-        printf("\nNome: %s \nPontos: %d \n", nome, pontos);
+    arquivo = AbreArquivo('l', "nomes.txt");
+    if(arquivo==NULL){
+        printf("O ranking esta vazio.");
+    } else {
+        for(i = 0; i < tamanho; i++){
+            fscanf(arquivo, "%s %d\n", &nome,&pontos);
+            printf("\nNome: %s \nPontos: %d \n", nome, pontos);
+        }
     }
     FecharArquivo(arquivo);
 
@@ -164,17 +162,19 @@ void LinhaHorizontal(int tamanho){
     printf("%c\n", 185);
 }
 
-// go to x;
+// go to x ou y;
 void gotoxy(int x,int y){
-    COORD c;
-    c.X = x;
-    c.Y = y;
+    COORD c; // Pega as coordenadas atuais
+    c.X = x; // Joga a coordenada x para varíavel x;
+    c.Y = y; // Joga a coordenada y para variavel y;
+    // endereça o cursor no console, utilizando linhas e colunas;
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE),c);
 }
 // Monta o menu
 void MontaMenu(){
+    int li = 4; // Varíavel de escolha
+    int tecla;
     TrocaCursor(0);
-    int li = 4, tecla;
     LinhaSuperior(40);
     MenuItem(40, "            Menu Principal");
     LinhaHorizontal(40);
@@ -184,32 +184,37 @@ void MontaMenu(){
     MenuItem(40, "    4 - Informacoes do Desenvolvedor");
     MenuItem(40, "    5 - Sair");
     LinhaRodape(40);
-    gotoxy(1,li);
-    printf(" -> ");
+    gotoxy(1,li); // vai para a linha 1 coluna no valor de li que seria 4 inicialmente
+    printf(" -> "); // adiciona a primeira flechinha nas coordenadas da função fotoxy
      do{
-            tecla=0;
-            if(kbhit()){
-                tecla = getch();
-                gotoxy(1,li);
-                printf("   ");
-                if(tecla==224)
-                    tecla = getch();
-                if(tecla == 72)
-                    li--;
-                else
-                    if(tecla == 80)
+        tecla = getch(); // Captura teclas que o usuário digita sem que imprima na tela.
+        gotoxy(1,li); // vai para a linha 1 coluna no valor de li que seria 4 inicialmente
+        printf("   "); // adiciona caracteres em branco nos 3 primeiros espaços do menu começando da coluna 1
+            if(tecla == 72){
+                li--;
+            } // se pressionado a tecla 72 que seria a tecla direcional para cima usando getch() subtrai na variavel li
+
+             // Código Especial:  ao serem pressionadas certas teclas (ou combinação de teclas) que não correspondem
+             // a um  caracter ASCII, o teclado envia ao 'buffer' do computador dois códigos, sendo o primeiro sempre 0.
+             // Por exemplo, se a tecla [F1] f or pressionada os valores 0 e 59 serão armazenados e a função deve ser
+             // chamada duas vezes para ler os dois códigos.
+            else{
+                if(tecla == 80)
                         li++;
-                if(li > 8)
+            }// se pressionado a tecla 80 que seria a tecla direcional para baixo usando getch() subtrai na variavel li
+                if(li > 8){
                     li=4;
-                else
-                    if(li < 4)
+                } // se li for maior que 8 atribui novamente o valor 4 na varíavel li
+                else{
+                    if(li < 4){
                         li = 8;
+                    } // se li for menor que 4 atribui novamente o valor 8 na varíavel li
+                }
                 gotoxy(1,li);
-                printf(" -> ");
+                printf(" -> "); // començando da coluna 1 ele vai substituir 4 espaços pela flechinha
             }
-        }
-        while(tecla != 13);
-        menu(li);
+        while(tecla != 13); // enquanto não for pressionado a tecla 13(enter) da tabela ascii continua sendo executado
+        menu(li); // ao pressionar a tecla 13 vai ser chamado a função menu passando o parâmetro da varíavel li
 }
 // Função que guarda as informações do menu Instruções
 void instrucoes(){
@@ -232,7 +237,7 @@ void infodev(){
     printf("\n- Vinicius Oliveira");
     printf("\n- Larissa Lazzari");
     printf("\n- Oliver J. Godoy");
-    printf("\n- Gabriel Hoffman");
+    printf("\n- Gabriel Hoffmann");
     printf("\n");
     printf("\n\nAperte qualquer tecla para voltar...");
     system("pause>null");
@@ -243,6 +248,7 @@ void menuCadastro(){
     char nome[50];
     int pontos;
     system("cls");
+    TrocaCursor(1);
     printf("\nDigite seu nome: ");
     setbuf(stdin, NULL);
     gets(nome);
